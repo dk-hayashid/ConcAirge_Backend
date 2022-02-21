@@ -21,12 +21,13 @@ def parse():
     weight = float(user['weight'])
     sex = user['sex']
 
-    # TODO: 湿度をリアルタイムで受け取る(現在50%固定)
     comf_temp, _, _ = calc_comf_temp_p(
         50, age, sex, height, weight)
     
     comf_temp = round(comf_temp, 1)
     data = return_measured_data()
+
+    # TODO: 1月28日15時40分ぐらいの一番理想的なヒートマップを利用 
     save_temperature_map(data, comf_temp)
     with open('./map.png', "rb") as f:
         img_base64 = base64.b64encode(f.read()).decode('utf-8')
