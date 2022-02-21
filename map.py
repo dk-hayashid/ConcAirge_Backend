@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import numpy as np
 plt.rcParams["font.size"] = 18
+
 
 def return_close_value(array, target):
     mindiff = np.inf
@@ -12,38 +14,47 @@ def return_close_value(array, target):
             minvalue = value
     return minvalue
 
+
 def save_temperature_map(data: np.ndarray, target: float):
 
     close_value = return_close_value(data, target)
 
     # 図の生成
-    fig = plt.figure(figsize=(10,4))
+    fig = plt.figure(figsize=(5, 5))
     ax = plt.gca()
 
     # 目盛りの調整
     ax.grid(color='black', linestyle='-.', linewidth=1)
-    ax.set_xticks(np.arange(0,7, 1))
-    ax.set_yticks(np.arange(0,4, 1))
+    ax.set_xticks(np.arange(0, 6, 1))
+    ax.set_yticks(np.arange(0, 11, 1))
 
     # 温度マッピング
-    plt.pcolormesh(data.reshape(3,6), cmap="Reds", edgecolors='k', linewidth=2)
-    
+    plt.pcolormesh(data.reshape(11, 5)[::-1,:], cmap="Reds", edgecolors='k', linewidth=2)
+
     # 誘導場所のピン打ち
     xmin, xmax = ax.get_xlim()
     ymin, ymax = ax.get_ylim()
-    width = abs((xmax - xmin) / 6)
-    height = abs((ymax - ymin) / 3)
+    width = abs((xmax - xmin) / 5)
+    height = abs((ymax - ymin) / 11)
     list_coordinate = []
     for y_coordinate in np.arange(ymin + height / 2, ymax, height):
         for x_coordinate in np.arange(xmin + width / 2, xmax, width):
             list_coordinate.append([x_coordinate, y_coordinate])
-    dict_coordinate = {key:value for key, value in zip(data, list_coordinate)}
-    x_coordinate_target, y_coordinate_target = [v for k, v in dict_coordinate.items() if k == close_value][0]
-    ax.scatter(x_coordinate_target, y_coordinate_target, s=600, c="yellow", marker="*", alpha=0.9,
-                linewidths=2, edgecolors="orange")
+    coordinate_target_list = []
+    for temperature, coordinate in zip(data, list_coordinate):
+        if temperature == close_value:
+            coordinate_target_list.append(coordinate)
+
+    image = plt.imread('./locater.png')
+    for coordinate_target in coordinate_target_list:
+        ax.add_artist( 
+            AnnotationBbox(
+                OffsetImage(image, zoom=0.06), (coordinate_target[0], coordinate_target[1]+height/2), frameon=False
+            )
+        )
 
     # 全体のレイアウト調整
-    spines=5
+    spines = 5
     ax.spines["top"].set_linewidth(spines)
     ax.spines["left"].set_linewidth(spines)
     ax.spines["bottom"].set_linewidth(spines)
@@ -53,6 +64,4 @@ def save_temperature_map(data: np.ndarray, target: float):
     plt.colorbar()
     ax.axes.xaxis.set_visible(False)
     ax.axes.yaxis.set_visible(False)
-    ax.set_title('Temperature Map')
-    # plt.subplots_adjust(left=0, right=1, bottom=0, top=1)
     fig.savefig('./map.png', transparent=True)
