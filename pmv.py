@@ -271,7 +271,7 @@ temp_max=28
 temp_step=0.1
 
 
-def calc_comf_temp_p(RH,AGE,SEX,HEIGHT,WEIGHT,PPD_lim=6,CLO=1,MET=1.2,WME=0,VEL=0.1):
+def calc_comf_temp_p(RH,AGE,SEX,HEIGHT,WEIGHT,CLO,PPD_lim=6,MET=1.2,WME=0,VEL=0.1):
     #個人差補正
     MET_p=MET*calc_bmr(AGE,SEX,HEIGHT,WEIGHT)/(calc_bsa(HEIGHT,WEIGHT)*859.1174476)
 

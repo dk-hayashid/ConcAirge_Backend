@@ -59,10 +59,11 @@ def parse():
     height = float(user['height'])
     weight = float(user['weight'])
     sex = user['sex']
+    clo = float(user['fashion'])
 
     # TODO: 湿度をリアルタイムで受け取る(現在50%固定)
     comf_temp, _, _ = calc_comf_temp_p(
-        50, age, sex, height, weight)
+        50, age, sex, height, weight, clo)
     
     comf_temp = round(comf_temp, 1)
     data = return_measured_data()
