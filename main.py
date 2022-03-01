@@ -8,6 +8,8 @@ from numpy import TooHardError
 from pmv import calc_comf_temp_p
 from map import save_temperature_map
 from sensor import return_measured_data
+from form import return_age
+
 import pandas as pd
 import requests
 
@@ -101,7 +103,8 @@ def parse():
     global age,height,weight,sex,comf_temp,email
     user = request.get_json()
     user = user['post_text']
-    age = int(user['age'])
+    age = return_age(user['birthday'])
+    print(age)
     height = float(user['height'])
     weight = float(user['weight'])
     sex = user['sex']
