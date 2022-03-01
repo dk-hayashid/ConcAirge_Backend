@@ -1,2 +1,5 @@
 map.png
-
+__pycache__/
+.ipynb_checkpoints/
+dev.ipynb
+venv/
