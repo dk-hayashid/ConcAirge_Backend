@@ -3,8 +3,6 @@ from flask import request, make_response, jsonify, send_file
 from flask_cors import CORS
 import base64
 
-from numpy import TooHardError
-
 from pmv import calc_comf_temp_p
 from map import save_temperature_map
 from sensor import return_measured_data
@@ -104,7 +102,6 @@ def parse():
     user = request.get_json()
     user = user['post_text']
     age = return_age(user['birthday'])
-    print(age)
     height = float(user['height'])
     weight = float(user['weight'])
     sex = user['sex']
